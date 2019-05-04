@@ -1272,25 +1272,25 @@ class YoutubeDL(object):
                     elif format_spec == 'bestaudio':
                         audio_formats = [
                             f for f in formats
-                            if f.get('vcodec') == 'none']
+                            if f.get('vcodec') in ['none', None]]
                         if audio_formats:
                             yield audio_formats[-1]
                     elif format_spec == 'worstaudio':
                         audio_formats = [
                             f for f in formats
-                            if f.get('vcodec') == 'none']
+                            if f.get('vcodec') in ['none', None]]
                         if audio_formats:
                             yield audio_formats[0]
                     elif format_spec == 'bestvideo':
                         video_formats = [
                             f for f in formats
-                            if f.get('acodec') == 'none']
+                            if f.get('acodec') in ['none', None]]
                         if video_formats:
                             yield video_formats[-1]
                     elif format_spec == 'worstvideo':
                         video_formats = [
                             f for f in formats
-                            if f.get('acodec') == 'none']
+                            if f.get('acodec') in ['none', None]]
                         if video_formats:
                             yield video_formats[0]
                     else:
@@ -1307,13 +1307,13 @@ class YoutubeDL(object):
                     format_1, format_2 = [f['format_id'] for f in formats_info]
                     # The first format must contain the video and the
                     # second the audio
-                    if formats_info[0].get('vcodec') == 'none':
+                    if formats_info[0].get('vcodec') in ['none', None]:
                         self.report_error('The first format must '
                                           'contain the video, try using '
                                           '"-f %s+%s"' % (format_2, format_1))
                         return
                     # Formats must be opposite (video+audio)
-                    if formats_info[0].get('acodec') == 'none' and formats_info[1].get('acodec') == 'none':
+                    if formats_info[0].get('acodec') in ['none', None] and formats_info[1].get('acodec') in ['none', None]:
                         self.report_error(
                             'Both formats %s and %s are video-only, you must specify "-f video+audio"'
                             % (format_1, format_2))
@@ -1619,9 +1619,9 @@ class YoutubeDL(object):
         # https://github.com/ytdl-org/youtube-dl/issues/10083).
         incomplete_formats = (
             # All formats are video-only or
-            all(f.get('vcodec') != 'none' and f.get('acodec') == 'none' for f in formats) or
+            all(f.get('vcodec') != 'none' and f.get('acodec') in ['none', None] for f in formats) or
             # all formats are audio-only
-            all(f.get('vcodec') == 'none' and f.get('acodec') != 'none' for f in formats))
+            all(f.get('vcodec') in ['none', None] and f.get('acodec') != 'none' for f in formats))
 
         ctx = {
             'formats': formats,
@@ -2112,7 +2112,7 @@ class YoutubeDL(object):
 
     @staticmethod
     def format_resolution(format, default='unknown'):
-        if format.get('vcodec') == 'none':
+        if format.get('vcodec') in ['none', None]:
             return 'audio only'
         if format.get('resolution') is not None:
             return format['resolution']
@@ -2161,7 +2161,7 @@ class YoutubeDL(object):
         if fdict.get('acodec') is not None:
             if res:
                 res += ', '
-            if fdict['acodec'] == 'none':
+            if fdict['acodec'] in ['none', None]:
                 res += 'video only'
             else:
                 res += '%-5s' % fdict['acodec']
